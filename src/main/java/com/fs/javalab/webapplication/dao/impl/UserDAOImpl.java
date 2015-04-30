@@ -86,7 +86,22 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean isExist(User user) throws TimeoutException {
-        return jdbcTemplate.
+    public boolean isExist(final User user) throws TimeoutException {
+        return jdbcTemplate.query(SELECT_USER_BY_LOGIN,
+                new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                        preparedStatement.setString(1, user.getLogin());
+                    }
+                },
+                new ResultSetExtractor<Boolean>() {
+                    @Override
+                    public Boolean extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                        if (resultSet.next()) {
+                            return true;
+                        }
+                        return false;
+                    }
+                });
     }
 }
