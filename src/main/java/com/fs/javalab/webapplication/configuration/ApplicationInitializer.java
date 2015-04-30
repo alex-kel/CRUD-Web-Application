@@ -14,8 +14,7 @@ public class ApplicationInitializer extends AbstractAnnotationConfigDispatcherSe
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{DataSourceConfiguration.class,
-                DAOConfiguration.class};
+        return new Class<?>[]{DataSourceConfiguration.class};
     }
 
     @Override

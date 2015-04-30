@@ -1,5 +1,7 @@
 package com.fs.javalab.webapplication.controller;
 
+import com.fs.javalab.webapplication.dao.UserDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/")
 public class LoginController {
 
+    @Autowired
+    UserDAO userDAO;
+
     private final static String LOGIN_PAGE = "login";
     private final static String LOGIN_ERROR_PAGE = "login_error";
+    private final static String PROFILE_PAGE = "profile";
 
     @RequestMapping(method = RequestMethod.GET)
     public String getLoginView(ModelMap model) {
@@ -26,6 +32,9 @@ public class LoginController {
                         @RequestParam("password") String password,
                         HttpServletRequest request,
                         HttpServletResponse response) {
-        return LOGIN_ERROR_PAGE;
+        if (userDAO.getUser(login, password) == null) {
+            return LOGIN_ERROR_PAGE;
+        }
+        return PROFILE_PAGE;
     }
 }
