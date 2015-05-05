@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 
@@ -41,6 +42,10 @@ public class UserController {
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteUser(HttpServletRequest request, HttpServletResponse response) {
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
         request.getSession().invalidate();
         try {
             userDAO.deleteUser(user);
@@ -51,8 +56,26 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public void updateUser(HttpServletRequest request, HttpServletResponse response) {
-
+    public void updateUser(@RequestBody UserForm form, HttpServletRequest request, HttpServletResponse response) throws TimeoutException, IOException {
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        user.setLogin(form.getLogin());
+        user.setPassword(form.getPassword());
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        if (!userDAO.isExist(user)) {
+            userDAO.updateUser(user);
+            response.getWriter().print("User successfully updated");
+            response.getWriter().flush();
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.getWriter().print("This login already in use");
+            response.getWriter().flush();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
 }

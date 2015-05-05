@@ -26,18 +26,22 @@ $(document).ready(function () {
     $('#update').submit(function (event) {
         event.preventDefault();
         $('.preloader').show();
-        var dataString = $('#update').serialize();
+        var login = $("#login").val();
+        var password = $("#password").val();
+        var firstName = $("#firstName").val();
+        var lastName = $("#lastName").val();
         $.ajax({
-            contentType: "application/x-www-form-urlencoded",
+            contentType: "application/json",
             url: 'profile',
             type: 'PUT',
-            data: dataString,
-            success: function (result) {
-                $('.preloader').hide();
-                alert("User successfully updated");
-                window.location.reload();
-            },
-            error: function (xhr, status) {
+            dataType: "json",
+            data: JSON.stringify({
+                "login": login,
+                "password": password,
+                "firstName": firstName,
+                "lastName": lastName
+            }),
+            complete: function (xhr, status) {
                 alert(xhr.responseText)
                 $('.preloader').hide();
             }

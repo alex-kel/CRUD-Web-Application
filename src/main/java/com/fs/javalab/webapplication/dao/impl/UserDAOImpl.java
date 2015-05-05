@@ -92,6 +92,7 @@ public class UserDAOImpl implements UserDAO {
                     @Override
                     public void setValues(PreparedStatement preparedStatement) throws SQLException {
                         preparedStatement.setString(1, user.getLogin());
+                        preparedStatement.setInt(2, user.getId());
                     }
                 },
                 new ResultSetExtractor<Boolean>() {
