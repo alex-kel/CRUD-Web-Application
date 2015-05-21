@@ -44,6 +44,7 @@ $(document).ready(function () {
             complete: function (xhr, status) {
                 alert(xhr.responseText)
                 $('.preloader').hide();
+                window.location.reload();
             }
         });
     });

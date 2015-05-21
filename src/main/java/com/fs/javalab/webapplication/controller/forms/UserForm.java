@@ -1,7 +1,9 @@
 package com.fs.javalab.webapplication.controller.forms;
 
 
-public class UserForm {
+import java.io.Serializable;
+
+public class UserForm implements Serializable{
 
     String login, password, firstName, lastName;
 
